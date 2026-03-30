@@ -1,5 +1,11 @@
 # 🎵 Music Recommender Simulation
 
+## Quick Start
+
+- Install dependencies: `pip install -r requirements.txt`
+- Run the app: `python -m src.main`
+- Run tests: `pytest`
+
 ## Project Summary
 
 In this project you will build and explain a small music recommender system.
@@ -92,6 +98,7 @@ These weights are a starting point and can be tuned after testing with different
    python -m venv .venv
    source .venv/bin/activate      # Mac or Linux
    .venv\Scripts\activate         # Windows
+   ```
 
 2. Install dependencies
 
@@ -123,7 +130,9 @@ This is the formatted terminal output from running:
 python -m src.main
 ```
 
-![Terminal Output](terminal_output_screenshot.png)
+<p align="center">
+   <img src="terminal_output_screenshot.png" alt="Terminal output screenshot" width="900" />
+</p>
 
 ### Screenshots 1-6
 
