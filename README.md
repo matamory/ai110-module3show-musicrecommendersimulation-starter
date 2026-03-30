@@ -17,17 +17,68 @@ Replace this paragraph with your own summary of what your version does.
 
 ## How The System Works
 
-Explain your design in plain language.
+Real-world recommendation systems (like Spotify or YouTube) usually combine behavior signals from similar users with content signals from each song, then rank items by how well they match a listener's taste and current context. In this simulation, we prioritize a transparent content-based approach: each song is scored by how closely its attributes match a user's stated preferences, then the top-scoring songs are recommended.
 
-Some prompts to answer:
+### Features Used In This Simulation
 
-- What features does each `Song` use in your system
-  - For example: genre, mood, energy, tempo
-- What information does your `UserProfile` store
-- How does your `Recommender` compute a score for each song
-- How do you choose which songs to recommend
+Song features (`Song` object):
 
-You can include a simple diagram or bullet list if helpful.
+- `id`
+- `title`
+- `artist`
+- `genre`
+- `mood`
+- `energy`
+- `tempo_bpm`
+- `valence`
+- `danceability`
+- `acousticness`
+
+User preference features (`UserProfile` object):
+
+- `favorite_genre`
+- `favorite_mood`
+- `target_energy`
+- `likes_acoustic`
+
+### Algorithm Plan (Data Flow)
+
+1. Input (User Preferences)
+- Accept a user profile with target taste values (genre, mood, energy preference, and acoustic preference).
+
+2. Process (Scoring Loop)
+- Load all songs from `data/songs.csv`.
+- Loop through each song and compute a total score using weighted feature rules.
+- Categorical scoring:
+   - Genre match adds points.
+   - Mood match adds points.
+- Numeric scoring:
+   - Reward closeness to the user's target energy using a distance-based rule.
+   - Example: `energy_score = 1 - abs(song_energy - target_energy)` (clipped to `[0, 1]`).
+- Optional acoustic preference:
+   - If user likes acoustic songs, reward higher acousticness.
+   - If not, reward lower acousticness.
+- Save `(song, score, explanation)` for each song.
+
+3. Output (Ranking)
+- Sort all scored songs from highest to lowest score.
+- Return the Top K songs as recommendations.
+- Provide short explanations showing why each top song matched.
+
+### Suggested Starting Weights
+
+- Mood match: `0.30`
+- Genre match: `0.20`
+- Energy closeness: `0.25`
+- Acoustic preference alignment: `0.25`
+
+These weights are a starting point and can be tuned after testing with different user profiles.
+
+### Potential Biases To Watch
+
+- This system may over-prioritize exact genre or mood labels and miss songs that are a strong numeric match but tagged differently.
+- A single target energy value can bias recommendations toward one listening context (for example study mode) and under-serve other contexts (for example workouts).
+- The small song catalog can make results feel repetitive and may not represent diverse musical tastes.
 
 ---
 
@@ -63,6 +114,38 @@ pytest
 ```
 
 You can add more tests in `tests/test_recommender.py`.
+
+### Terminal Output Screenshot
+
+This is the formatted terminal output from running:
+
+```bash
+python -m src.main
+```
+
+![Terminal Output](terminal_output_screenshot.png)
+
+Sample output:
+
+```text
+Loaded songs: 18
+
+Top Recommendations
+============================================================
+1. Sunrise City by Neon Echo
+   Final Score : 9.90
+   Reasons:
+   - genre match (+2.0)
+   - mood match (+3.0)
+   - energy closeness (+4.90)
+------------------------------------------------------------
+2. Rooftop Lights by Indigo Parade
+   Final Score : 7.80
+   Reasons:
+   - mood match (+3.0)
+   - energy closeness (+4.80)
+------------------------------------------------------------
+```
 
 ---
 
