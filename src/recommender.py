@@ -108,12 +108,12 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
     score = 0.0
     reasons: List[str] = []
 
-    # Exact genre match bonus.
+    # Experimental weight shift: reduce genre influence.
     pref_genre = str(user_prefs.get("genre", "")).strip().lower()
     song_genre = str(song.get("genre", "")).strip().lower()
     if pref_genre and song_genre == pref_genre:
-        score += 2.0
-        reasons.append("genre match (+2.0)")
+        score += 1.0
+        reasons.append("genre match (+1.0)")
 
     # Exact mood match bonus.
     pref_mood = str(user_prefs.get("mood", "")).strip().lower()
@@ -126,7 +126,8 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
     target_energy = float(user_prefs.get("energy", 0.5))
     song_energy = float(song.get("energy", 0.0))
     energy_similarity = max(0.0, 1.0 - abs(song_energy - target_energy))
-    energy_points = 5.0 * energy_similarity
+    # Experimental weight shift: increase energy influence.
+    energy_points = 10.0 * energy_similarity
     score += energy_points
     reasons.append(f"energy closeness (+{energy_points:.2f})")
 
