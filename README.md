@@ -23,7 +23,7 @@ Replace this paragraph with your own summary of what your version does.
 
 ## How The System Works
 
-Real-world recommendation systems (like Spotify or YouTube) usually combine behavior signals from similar users with content signals from each song, then rank items by how well they match a listener's taste and current context. In this simulation, we prioritize a transparent content-based approach: each song is scored by how closely its attributes match a user's stated preferences, then the top-scoring songs are recommended.
+Real-world recommendation systems (like Spotify or YouTube) usually combine behavior signals from similar users with content signals from each song, then rank items by how well they match a listener's taste and current context. In this simulation, we use a transparent content-based approach: each song is scored against one user taste profile, then the highest-scoring songs are recommended.
 
 ### Features Used In This Simulation
 
@@ -47,23 +47,59 @@ User preference features (`UserProfile` object):
 - `target_energy`
 - `likes_acoustic`
 
-### Algorithm Plan (Data Flow)
+### Taste Profile
+
+The recommender uses one simple dictionary as its comparison target:
+
+```python
+taste_profile = {
+    "favorite_genre": "rock",
+    "favorite_mood": "intense",
+    "target_energy": 0.86,
+    "likes_acoustic": False,
+}
+```
+
+This profile is specific enough to separate very different listening modes, such as intense rock versus chill lofi, because it combines genre, mood, and numeric similarity instead of relying on only one label.
+
+### Algorithm Recipe
+
+The scoring rule starts with a small weighted sum:
+
+`final_score = genre_points + mood_points + energy_points`
+
+Where:
+
+- `genre_points = 2.0` when the song's genre matches the user's favorite genre.
+- `mood_points = 1.0` when the song's mood matches the user's favorite mood.
+- `energy_points = 2.0 * (1 - abs(song_energy - target_energy))`, clipped so closer energy gets more points.
+
+This keeps the rule easy to explain. Genre is the strongest exact-match signal, mood is a smaller exact-match signal, and energy is handled as similarity rather than "higher is better" or "lower is better."
+
+### Data Flow
+
+```mermaid
+flowchart LR
+    A[Input: User Preferences] --> B[Process: Score each song in the CSV]
+    B --> C[Apply scoring rules to genre, mood, and energy]
+    C --> D[Output: Rank songs by final score]
+    D --> E[Top K Recommendations]
+```
+
+### Step-by-Step Plan (Data Flow)
 
 1. Input (User Preferences)
-- Accept a user profile with target taste values (genre, mood, energy preference, and acoustic preference).
+- Accept a user profile with target taste values: favorite genre, favorite mood, and target energy.
 
 2. Process (Scoring Loop)
 - Load all songs from `data/songs.csv`.
 - Loop through each song and compute a total score using weighted feature rules.
 - Categorical scoring:
-   - Genre match adds points.
-   - Mood match adds points.
+   - Genre match adds `+2.0` points.
+   - Mood match adds `+1.0` point.
 - Numeric scoring:
-   - Reward closeness to the user's target energy using a distance-based rule.
-   - Example: `energy_score = 1 - abs(song_energy - target_energy)` (clipped to `[0, 1]`).
-- Optional acoustic preference:
-   - If user likes acoustic songs, reward higher acousticness.
-   - If not, reward lower acousticness.
+   - Reward closeness to the user's target energy using a distance-based rule instead of simply rewarding higher or lower energy.
+   - Example: `energy_points = 2.0 * (1 - abs(song_energy - target_energy))`.
 - Save `(song, score, explanation)` for each song.
 
 3. Output (Ranking)
@@ -71,19 +107,11 @@ User preference features (`UserProfile` object):
 - Return the Top K songs as recommendations.
 - Provide short explanations showing why each top song matched.
 
-### Suggested Starting Weights
-
-- Mood match: `0.30`
-- Genre match: `0.20`
-- Energy closeness: `0.25`
-- Acoustic preference alignment: `0.25`
-
-These weights are a starting point and can be tuned after testing with different user profiles.
-
 ### Potential Biases To Watch
 
-- This system may over-prioritize exact genre or mood labels and miss songs that are a strong numeric match but tagged differently.
-- A single target energy value can bias recommendations toward one listening context (for example study mode) and under-serve other contexts (for example workouts).
+- This system may over-prioritize exact genre labels and miss songs that are a strong mood or energy match but tagged differently.
+- Mood labels are coarse and subjective, so two listeners could interpret the same mood tag differently.
+- A single target energy value can pull recommendations toward one listening context and under-serve other contexts.
 - The small song catalog can make results feel repetitive and may not represent diverse musical tastes.
 
 ---
