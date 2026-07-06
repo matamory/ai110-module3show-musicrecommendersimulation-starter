@@ -36,9 +36,11 @@ class Recommender:
     Required by tests/test_recommender.py
     """
     def __init__(self, songs: List[Song]):
+        """Store the song catalog used for recommendations."""
         self.songs = songs
 
     def recommend(self, user: UserProfile, k: int = 5) -> List[Song]:
+        """Return the top-k songs ranked for a user profile."""
         user_prefs = {
             "genre": user.favorite_genre,
             "mood": user.favorite_mood,
@@ -61,6 +63,7 @@ class Recommender:
         return ranked[:k]
 
     def explain_recommendation(self, user: UserProfile, song: Song) -> str:
+        """Explain why a specific song scored well for a user."""
         user_prefs = {
             "genre": user.favorite_genre,
             "mood": user.favorite_mood,
@@ -110,8 +113,8 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
     pref_genre = str(user_prefs.get("genre", "")).strip().lower()
     song_genre = str(song.get("genre", "")).strip().lower()
     if pref_genre and song_genre == pref_genre:
-        score += 2.0
-        reasons.append("genre match (+2.0)")
+        score += 1.0
+        reasons.append("genre match (+1.0)")
 
     # Mood is a smaller exact-match signal.
     pref_mood = str(user_prefs.get("mood", "")).strip().lower()
@@ -124,7 +127,7 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
     target_energy = float(user_prefs.get("energy", 0.5))
     song_energy = float(song.get("energy", 0.0))
     energy_similarity = max(0.0, 1.0 - abs(song_energy - target_energy))
-    energy_points = 2.0 * energy_similarity
+    energy_points = 4.0 * energy_similarity
     score += energy_points
     reasons.append(f"energy closeness (+{energy_points:.2f})")
 

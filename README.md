@@ -8,16 +8,9 @@
 
 ## Project Summary
 
-In this project you will build and explain a small music recommender system.
-
-Your goal is to:
-
-- Represent songs and a user "taste profile" as data
-- Design a scoring rule that turns that data into recommendations
-- Evaluate what your system gets right and wrong
-- Reflect on how this mirrors real world AI recommenders
-
-Replace this paragraph with your own summary of what your version does.
+This project builds a simple music recommender.
+It scores songs by genre, mood, and energy.
+Then it ranks the songs and shows why each one was chosen.
 
 ---
 
@@ -150,108 +143,91 @@ pytest
 
 You can add more tests in `tests/test_recommender.py`.
 
-### Terminal Output Screenshot
+### Sample Recommendation Output
 
-This is the formatted terminal output from running:
-
-```bash
-python -m src.main
-```
-
-<p align="center">
-   <img src="terminal_output_screenshot.png" alt="Terminal output screenshot" width="900" />
-</p>
-
-### Screenshots 1-6
-
-| Screenshot 1 | Screenshot 2 |
-|---|---|
-| ![Screenshot 1](screenshot1.png) | ![Screenshot 2](screenshot2.png) |
-
-| Screenshot 3 | Screenshot 4 |
-|---|---|
-| ![Screenshot 3](screenshot3.png) | ![Screenshot 4](screenshot4.png) |
-
-| Screenshot 5 | Screenshot 6 |
-|---|---|
-| ![Screenshot 5](screenshot5.png) | ![Screenshot 6](screenshot6.png) |
-
-Sample output:
+This is the formatted terminal output for the default pop/happy profile from running the recommender:
 
 ```text
-Loaded songs: 18
+Loaded songs: 28
 
+High-Energy Pop
+Preferences: {'genre': 'pop', 'mood': 'happy', 'energy': 0.9, 'likes_acoustic': False}
 Top Recommendations
 ============================================================
-1. Sunrise City by Neon Echo
-   Final Score : 9.90
+1. Dynamite by BTS
+   Final Score: 5.37
    Reasons:
    - genre match (+2.0)
-   - mood match (+3.0)
-   - energy closeness (+4.90)
+   - mood match (+1.0)
+   - energy closeness (+1.92)
+   - non-acoustic fit (+0.45)
 ------------------------------------------------------------
-2. Rooftop Lights by Indigo Parade
-   Final Score : 7.80
+2. Sunrise City by Neon Echo
+   Final Score: 5.25
    Reasons:
-   - mood match (+3.0)
-   - energy closeness (+4.80)
+   - genre match (+2.0)
+   - mood match (+1.0)
+   - energy closeness (+1.84)
+   - non-acoustic fit (+0.41)
+------------------------------------------------------------
+3. Gym Hero by Max Pulse
+   Final Score: 4.42
+   Reasons:
+   - genre match (+2.0)
+   - energy closeness (+1.94)
+   - non-acoustic fit (+0.47)
+------------------------------------------------------------
+4. Permission to Dance by BTS
+   Final Score: 4.38
+   Reasons:
+   - genre match (+2.0)
+   - energy closeness (+1.94)
+   - non-acoustic fit (+0.45)
+------------------------------------------------------------
+5. Butter by BTS
+   Final Score: 4.34
+   Reasons:
+   - genre match (+2.0)
+   - energy closeness (+1.88)
+   - non-acoustic fit (+0.46)
 ------------------------------------------------------------
 ```
+
 
 ---
 
 ## Experiments You Tried
 
-Use this section to document the experiments you ran. For example:
-
-- What happened when you changed the weight on genre from 2.0 to 0.5
-- What happened when you added tempo or valence to the score
-- How did your system behave for different types of users
+I tried a normal profile, an adversarial profile, and an edge-case profile.
+I also shifted the weights so energy mattered more and genre mattered less.
+The rankings changed a lot, but they still made sense for high-energy songs.
 
 ---
 
 ## Limitations and Risks
 
-Summarize some limitations of your recommender.
-
-Examples:
-
-- It only works on a tiny catalog
-- It does not understand lyrics or language
-- It might over favor one genre or mood
-
-You will go deeper on this in your model card.
+The catalog is small, so the results can feel repetitive.
+The system can over-focus on energy and miss good mood matches.
+It does not understand lyrics or deeper context.
 
 ---
 
 ## Reflection
 
-Read and complete `model_card.md`:
-
-[**Model Card**](model_card.md)
-
-Write 1 to 2 paragraphs here about what you learned:
-
-- about how recommenders turn data into predictions
-- about where bias or unfairness could show up in systems like this
+My biggest learning moment was seeing how one small weight change can shift the whole ranking.
+AI tools helped me move faster, but I still had to check the results carefully.
+I was surprised that a simple formula can still feel like a real recommender.
+If I kept going, I would test more profiles and add diversity rules.
 
 
 ---
 
 ## 7. `model_card_template.md`
 
-Combines reflection and model card framing from the Module 3 guidance. :contentReference[oaicite:2]{index=2}  
+This template shows the same ideas in a fuller model card format.
 
 ```markdown
 # 🎧 Model Card - Music Recommender Simulation
-
-## 1. Model Name
-
-Give your recommender a name, for example:
-
-> VibeFinder 1.0
-
----
 
 ## 2. Intended Use
 
