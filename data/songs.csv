@@ -17,3 +17,13 @@ id,title,artist,genre,mood,energy,tempo_bpm,valence,danceability,acousticness
 16,Sunset Market,Kora Tide,afrobeat,playful,0.79,104,0.81,0.84,0.27
 17,Dust Trail Radio,Cedar Creek,country,nostalgic,0.47,92,0.66,0.57,0.73
 18,Midnight Freight,Blue Lantern,blues,gritty,0.54,82,0.41,0.49,0.68
+19,Dynamite,BTS,pop,happy,0.86,114,0.91,0.75,0.10
+20,Butter,BTS,pop,playful,0.84,110,0.88,0.82,0.08
+21,Spring Day,BTS,pop,melancholic,0.48,76,0.46,0.55,0.72
+22,Boy With Luv,BTS,pop,joyful,0.79,120,0.86,0.80,0.15
+23,Blood Sweat & Tears,BTS,k-pop,moody,0.67,98,0.42,0.63,0.24
+24,Fake Love,BTS,k-pop,intense,0.72,136,0.31,0.58,0.12
+25,ON,BTS,hip hop,rebellious,0.90,150,0.39,0.71,0.07
+26,Idol,BTS,k-pop,euphoric,0.95,140,0.83,0.89,0.05
+27,Life Goes On,BTS,pop,relaxed,0.33,74,0.58,0.50,0.80
+28,Permission to Dance,BTS,pop,festive,0.87,126,0.92,0.88,0.11
